@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Kafka/Zookeeper tar files
+*.tar.gz
+*.tgz
+kafka_*/
+zookeeper_*/
+
+# Logs
+*.log
+logs/
