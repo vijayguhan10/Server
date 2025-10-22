@@ -1,4 +1,16 @@
 {
+  "name": "non-blocking-io",
+  "version": "1.0.0",
+  "description": "Banking application with Kafka tracking",
+  "main": "Index.js",
+  "scripts": {
+    "start:producer": "node kafka/producer.js",
+    "start:consumer": "node kafka/consumer.js",
+    "start:mouse-producer": "node kafka/mouseProducer.js",
+    "start:keyboard-producer": "node kafka/keyboardProducer.js",
+    "start:textinput-producer": "node kafka/textInputProducer.js",
+    "start:aggregator": "node kafka/eventAggregator.js"
+  },
   "dependencies": {
     "@headlessui/react": "^2.2.7",
     "@react-three/drei": "^10.7.4",
@@ -23,5 +35,9 @@
     "tailwindcss": "^4.1.13",
     "three": "^0.180.0",
     "xlsx": "^0.18.5"
-  }
+  },
+  "devDependencies": {},
+  "keywords": ["kafka", "banking", "tracking"],
+  "author": "",
+  "license": "ISC"
 }
