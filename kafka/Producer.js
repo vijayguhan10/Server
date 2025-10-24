@@ -2,7 +2,8 @@ const { Kafka } = require('kafkajs');
 
 const kafka = new Kafka({
   clientId: 'multi-topic-producer',
-  brokers: ['localhost:9092', 'localhost:9093', 'localhost:9094'],
+  // Single-broker setup based on docker-compose
+  brokers: ['localhost:9093'],
 });
 
 const producer = kafka.producer();
@@ -17,13 +18,35 @@ const runProducer = async () => {
   setInterval(async () => {
     for (const topic of topics) {
       const message = { id: counter++, value: Math.random() };
-      await producer.send({
-        topic,
-        messages: [
-          { key: String(counter % 3), value: JSON.stringify(message) },
-        ],
-      });
-      console.log(`Sent to ${topic}:`, message);
+      const sendTime = Date.now();
+      try {
+        const result = await producer.send({
+          topic,
+          // acks: -1 // uncomment to require all ISR acks if needed
+          messages: [
+            { key: String(counter % 3), value: JSON.stringify(message) },
+          ],
+        });
+
+        // KafkaJS returns metadata per topic/partition
+        for (const r of result) {
+          const partitions = r.partitions || r.partitionMetadata || [];
+          for (const p of partitions) {
+            const meta = {
+              topic: r.topicName || topic,
+              partition: p.partition,
+              baseOffset: p.baseOffset,
+              logAppendTime: p.logAppendTime,
+              sentAt: new Date(sendTime).toISOString(),
+              key: String(counter % 3),
+              payload: message,
+            };
+            console.log('[Producer ACK]', meta);
+          }
+        }
+      } catch (err) {
+        console.error('[Producer ERROR]', { topic, err: err.message });
+      }
     }
   }, 1000);
 };
