@@ -1,8 +1,6 @@
 const { Kafka } = require('kafkajs');
 
-// Admin script to pre-create topics for a single-broker cluster
-// Usage: node create-topics.js
-
+//
 const kafka = new Kafka({
   clientId: 'admin',
   brokers: ['localhost:9092'],
